@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	link "github.com/Niyalurahman/trustmint/cmd/link"
 	"github.com/Niyalurahman/trustmint/internal/config"
 	"github.com/spf13/cobra"
 )
@@ -28,6 +29,10 @@ var rootCmd = &cobra.Command{
 		}
 		return nil
 	},
+}
+
+func init() {
+	link.Register(rootCmd)
 }
 
 // Execute runs the root command
