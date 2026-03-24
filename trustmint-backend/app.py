@@ -212,6 +212,9 @@ def mint_nft(model_hash, dataset_hash, ipfs_cid, metadata_uri, creator_address):
     tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
 
+    if receipt.status == 0:
+        raise Exception("Minting transaction REVERTED by the blockchain! (Are you trying to publish the exact same model again?)")
+
     # Decode ModelMinted event to get token_id
     token_id = None
     for log in receipt.logs:
@@ -291,6 +294,9 @@ def list_on_marketplace(token_id, price_wei, seller_address):
         signed_list = w3.eth.account.sign_transaction(list_tx, DEPLOYER_KEY)
         list_tx_hash = w3.eth.send_raw_transaction(signed_list.raw_transaction)
         receipt = w3.eth.wait_for_transaction_receipt(list_tx_hash)
+
+        if receipt.status == 0:
+            raise Exception("Marketplace listing transaction REVERTED by the blockchain!")
 
         # Decode ListingCreated event
         for log in receipt.logs:
